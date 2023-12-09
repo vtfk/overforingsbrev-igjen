@@ -1,0 +1,44 @@
+{
+  "name": "overforingsbrev-igjen",
+  "version": "1.0.0",
+  "description": "creates, archives, and sends overforingsbrev to ansatt",
+  "main": "./index.js",
+  "scripts": {
+    "test": "standard && jest",
+    "test:verbose": "jest --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vtfk/overforingsbrev-igjen.git"
+  },
+  "keywords": [
+    "archive",
+    "omigjen"
+  ],
+  "author": "jorgtho",
+  "contributors": ["nilskt"],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vtfk//overforingsbrev-igjen/issues"
+  },
+  "homepage": "https://github.com/vtfk//overforingsbrev-igjen#readme",
+  "dependencies": {
+    "@vestfoldfylke/msal-token": "^1.0.1",
+    "@vtfk/logger": "^6.0.1",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "file-system-cache": "^2.4.4",
+    "file-type": "^16.5.4",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.10",
+    "jest": "^29.7.0",
+    "standard": "^17.1.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  }
+}
