@@ -17,7 +17,7 @@ module.exports = {
     DISPLAY_NAME: process.env.TFK_COUNTY_DISPLAY_NAME || 'Telemark fylkeskommune',
     CEO_NAME: process.env.VFK_COUNTY_DISPLAY_NAME || 'Herr Sjef'
   },
-  NUMBER_OF_DOCS: process.env.NUMBER_OF_DOCS || '10',
+  NUMBER_OF_DOCS_TO_HANDLE: Number(process.env.NUMBER_OF_DOCS_TO_HANDLE) ?? 10,
   VTFK_ARCHIVE: {
     URL: process.env.VTFK_ARCHIVE_URL,
     KEY: process.env.VTFK_ARCHIVE_KEY

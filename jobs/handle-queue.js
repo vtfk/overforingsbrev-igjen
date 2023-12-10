@@ -1,6 +1,7 @@
 const { readdirSync } = require('fs')
 const { handleDocument } = require('./handle-document')
 const { logConfig, logger } = require('@vtfk/logger')
+const { NUMBER_OF_DOCS_TO_HANDLE } = require('../config')
 
 /**
  *
@@ -13,12 +14,20 @@ const handleQueue = async (county) => {
   const queue = readdirSync(`./documents/${county.NAME}/queue`)
   const result = {
     handledDocs: 0,
+    waitingDocs: 0,
     skippedDocs: 0,
     unhandledErrors: 0
   }
   for (const document of queue) {
+    if (result.handledDocs >= NUMBER_OF_DOCS_TO_HANDLE) {
+      logConfig({
+        prefix: `handleQueue`
+      })
+      logger('info', [`We have now handled ${NUMBER_OF_DOCS_TO_HANDLE} documents, which is set as max per run`, 'Will not handle more, before next run. Returning'])
+      break
+    }
     logConfig({
-      prefix: `queueAndPublishReadyDocuments - ${county.NAME} - ${document}`
+      prefix: `handleQueue - ${county.NAME} - ${document}`
     })
     logger('info', ['Getting flowStatus, checking if ready for run'])
     let documentData
@@ -75,8 +84,12 @@ const handleQueue = async (county) => {
 
     logger('info', ['Document is ready for run - lets gooo!'])
     try {
-      await handleDocument(documentData, flowDefinition)
-      result.handledDocs++
+      const status = await handleDocument(documentData, flowDefinition)
+      if (status.wait) {
+        result.waitingDocs++
+      } else {
+        result.handledDocs++
+      }
     } catch (error) {
       logger('error', ['Unhandled error! Skipping document - jobs might run again... Please check', error.response?.data || error.stack || error.toString()])
       result.unhandledErrors++

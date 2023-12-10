@@ -281,6 +281,7 @@ const handleDocument = async (documentData, flowDefinition) => {
       }
     }
   }
+  return { wait: documentData.flowStatus.wait }
 }
 
 module.exports = { handleDocument }
