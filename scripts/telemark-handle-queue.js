@@ -1,5 +1,3 @@
-/* FOR ONLY RUNNING HANDLE DOCS (NOT ASK ISI-LOKAL FOR NEW DOCS) */
-
 (async () => {
   const { logger, logConfig } = require('@vtfk/logger')
   const { createLocalLogger } = require('../lib/local-logger')
@@ -38,7 +36,7 @@
     logConfig({
       prefix: 'queueAndHandleReadyDocuments' // Reset prefix
     })
-    logger('info', [`Handled documents from ${TFK_COUNTY.NAME} queue, result: handledDocs ${queueResult.handledDocs}, skippedDocs: ${queueResult.skippedDocs}, unhandledErrors: ${queueResult.unhandledErrors}`])
+    logger('info', [`Handled documents from ${TFK_COUNTY.NAME} queue, result: handledDocs ${queueResult.handledDocs}, waitingDocs: ${queueResult.waitingDocs}, skippedDocs: ${queueResult.skippedDocs}, unhandledErrors: ${queueResult.unhandledErrors}`])
   } catch (error) {
     logger('error', [`Failed when queueing ready documents for countyNumber: ${TFK_COUNTY.NAME}`, 'error', error.response?.data || error.stack || error.toString()])
   }

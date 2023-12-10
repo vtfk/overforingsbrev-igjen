@@ -1,11 +1,12 @@
 # overforingsbrev-igjen
 Nodejs script that handles document from vigo-isi
 
-
+# Flows
+## Overføringsbrev
+Oppretter et dokument per ansatt som skal få overføringsbrev fra csv-fil.
+Flytt over dokumentene til queue for riktig fylke. Kjør handle-queue for begge fylker, og nyt resultatet
 
 # Flyt
-## ./jobs/queue-ready-documents
-Lese fra xls? file
 
 ## ./jobs/handle-queue
 [./jobs/handle-queue.js](./jobs/handle-queue.js)
@@ -24,7 +25,7 @@ Lese fra xls? file
   - Dersom dokumentet har kjørt for mange ganger, legges det i failed-mappen
 
 ### Jobber som kan sjekkes / kjøres i ./jobs/handle-document (i sekvensiell rekkefølge)
-
+TODO: Legg til mulighe jobber
 
 #### stats
 Oppretter et statistikk-element i felles statistikk-database (basert på hvilket fylke dokumentet tilhører)
