@@ -10,8 +10,8 @@
   const VFK_ENABLED = true
   const VFK_CSV_PATH = 'C:/tempBackups/overforingsbrevliste/Vestfold ansatte oversendelsesbrev.csv'
 
-  const TFK_ENABLED = false
-  const TFK_CSV_PATH = 'csvpath'
+  const TFK_ENABLED = true
+  const TFK_CSV_PATH = 'C:/tempBackups/overforingsbrevliste/Telemark ansatte oversendelsesbrevNY.csv'
   /* -------- END MANUAL CONFIG -------- */
 
   const syncDir = (dir) => {
@@ -56,17 +56,29 @@
     syncDir(`./documents/${county.NAME}`)
     syncDir(`./documents/${county.NAME}/overforingsbrev`)
     syncDir(`./documents/${county.NAME}/overforingsbrev/invalidRows`)
+    syncDir(`./documents/${county.NAME}/overforingsbrev/duplicates`)
 
     const employees = await csv({ delimiter: ';' }).fromFile(csvFilePath, { encoding: 'utf-8' })
     let index = 0
     const result = {
       success: 0,
-      problems: 0
+      problems: 0,
+      duplicates: 0
     }
+
+    const fnrs = []
+
     for (const employee of employees) {
       index++
       const { ssn, valid, type, reasons } = validateFnr(employee['Fødselsnr'])
       
+      if (fnrs.includes(ssn)) {
+        logger('warn', [`${ssn} is already handled - moving to duplicates`])
+        writeFileSync(`./documents/${county.NAME}/overforingsbrev/duplicates/${index}.json`, JSON.stringify({ employee, ssn, valid, type, reasons }, null, 2))
+        result.duplicates++
+        continue
+      }
+
       if (!valid) {
         writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify({ employee, ssn, valid, type, reasons }, null, 2))
         result.problems++
@@ -82,8 +94,10 @@
         ssn,
         name: employee['Navn']
       }
+      
       const documentId = `${overforingsbrevInfo.name.replaceAll(' ', '')}-${index}`
       writeFileSync(`./documents/${county.NAME}/overforingsbrev/OVERFORINGSBREV_${documentId}.json`, JSON.stringify(overforingsbrevInfo, null, 2))
+      fnrs.push(ssn)
       result.success++
     }
     return result
@@ -100,11 +114,11 @@
 
   if (VFK_ENABLED) {
     const result = await overforingsbrevFromCsv(VFK_COUNTY, VFK_CSV_PATH)
-    logger('info', ['Finished converting from csv for Vestfold', 'Result', `Success: ${result.success}. Problems: ${result.problems}`])
+    logger('info', ['Finished converting from csv for Vestfold', 'Result', `Success: ${result.success}. Duplicates: ${result.duplicates}. Problems: ${result.problems}`])
   }
 
   if (TFK_ENABLED) {
     const result = await overforingsbrevFromCsv(TFK_COUNTY, TFK_CSV_PATH)
-    logger('info', ['Finished converting from csv for Telemark', 'Result', `Success: ${result.success}. Problems: ${result.problems}`])
+    logger('info', ['Finished converting from csv for Telemark', 'Result', `Success: ${result.success}. Duplicates: ${result.duplicates}. Problems: ${result.problems}`])
   }
 })()
