@@ -9,13 +9,13 @@ module.exports = {
     COUNTY_NUMBER: process.env.VFK_COUNTY_NUMBER || '39',
     NAME: process.env.VFK_COUNTY_NAME || 'vestfold',
     DISPLAY_NAME: process.env.VFK_COUNTY_DISPLAY_NAME || 'Vestfold fylkeskommune',
-    CEO_NAME: process.env.VFK_COUNTY_DISPLAY_NAME || 'Fru Sjef'
+    CEO_NAME: process.env.VFK_COUNTY_CEO_NAME || 'Fru Sjef'
   },
   TFK_COUNTY: {
     COUNTY_NUMBER: process.env.TFK_COUNTY_NUBER || '40',
     NAME: process.env.TFK_COUNTY_NAME || 'telemark',
     DISPLAY_NAME: process.env.TFK_COUNTY_DISPLAY_NAME || 'Telemark fylkeskommune',
-    CEO_NAME: process.env.VFK_COUNTY_DISPLAY_NAME || 'Herr Sjef'
+    CEO_NAME: process.env.TFK_COUNTY_CEO_NAME || 'Herr Sjef'
   },
   NUMBER_OF_DOCS_TO_HANDLE: Number(process.env.NUMBER_OF_DOCS_TO_HANDLE) ?? 10,
   VTFK_ARCHIVE: {
