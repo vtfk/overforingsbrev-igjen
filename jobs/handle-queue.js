@@ -87,6 +87,7 @@ const handleQueue = async (county) => {
       const status = await handleDocument(documentData, flowDefinition)
       if (status.wait) {
         result.waitingDocs++
+        result.handledDocs++
       } else {
         result.handledDocs++
       }
