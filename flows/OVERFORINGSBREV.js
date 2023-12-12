@@ -7,7 +7,7 @@
  *
 */
 
-const { NODE_ENV } = require('../config')
+const { NODE_ENV, EMAIL_INVALID_PROJECT, EMAIL_INVALID_ADDRESS } = require('../config')
 const { invalidAddressCheck } = require('../jobs/dispatch-document')
 
 module.exports = {
@@ -250,7 +250,7 @@ module.exports = {
       <br>Kunne dere ha hjulpet meg med å finne og sette korrekt ansvarlig person (leder) på dette personalprosjektet: <strong>${documentData.flowStatus.syncProject.result.ProjectNumber}</strong>?
       <br><br>Tusen takk på forhånd, og ha en fin dag! 😁`
       return {
-        to: ['jorgen.thorsnes@vtfk.no'],
+        to: EMAIL_INVALID_PROJECT,
         from: 'noreply@vtfk.no',
         subject: 'Opprettet personalprosjekt, men mangler leder som ansvarlig person',
         template: {
@@ -287,7 +287,7 @@ module.exports = {
       <br><br>PS. Jeg har lagt en merknad på dokumentet om hva som var galt med mottakers adresse.
       <br><br>Tusen takk på forhånd, og ha en fin dag! 😁`
       return {
-        to: ['jorgen.thosrsnes@vtfk.no'],
+        to: EMAIL_INVALID_ADDRESS,
         from: 'noreply@vtfk.no',
         subject: 'Trenger hjelp med å sende ut overføringsbrev på SvarUT grunnet mottakers adresse',
         template: {

@@ -51,5 +51,7 @@ module.exports = {
   },
   RETRY_INTERVALS_MINUTES,
   DELETE_FINISHED_AFTER_DAYS: process.env.DELETE_FINISHED_AFTER_DAYS || '30',
-  TEAMS_STATUS_WEBHOOK_URLS: (process.env.TEAMS_STATUS_WEBHOOK_URLS && (process.env.TEAMS_STATUS_WEBHOOK_URLS.split(','))) || []
+  TEAMS_STATUS_WEBHOOK_URLS: (process.env.TEAMS_STATUS_WEBHOOK_URLS && (process.env.TEAMS_STATUS_WEBHOOK_URLS.split(','))) || [],
+  EMAIL_INVALID_PROJECT: (process.env.EMAIL_INVALID_PROJECT && (process.env.EMAIL_INVALID_PROJECT.split(','))) || [],
+  EMAIL_INVALID_ADDRESS: (process.env.EMAIL_INVALID_ADDRESS && (process.env.EMAIL_INVALID_ADDRESS.split(','))) || []
 }
