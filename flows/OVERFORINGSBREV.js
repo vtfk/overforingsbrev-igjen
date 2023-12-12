@@ -143,7 +143,7 @@ module.exports = {
           streetAddress: invalidAddress ? '' : privatePerson.streetAddress,
           zipCode: invalidAddress ? '' : privatePerson.zipCode,
           zipPlace: invalidAddress ? '' : privatePerson.zipPlace,
-          documentResponsible: 'Ansvarligheten selv',
+          documentResponsible: 'Fylkesdirektør',
           sender: documentData.flowStatus.county.CEO_NAME
         }
       }
