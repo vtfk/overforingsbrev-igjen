@@ -311,10 +311,13 @@ module.exports = {
     */
     mapper: (documentData) => {
       return {
-        company: 'HRMU', // Required. Sector
+        company: 'FD', // Required. Sector
         description: 'Automatisk oppretting, arkivering, og utsending av et overføringsbrev for en ansatt', // Required. A description of what the statistic element represents
         type: documentData.flowStatus.documentType, // Required. A short searchable type-name that distinguishes the statistic element
-        externalId: documentData.flowStatus.documentId, // Optional. ID in the external {system}
+        PrivatePersonRecno: documentData.flowStatus.syncPrivatePerson.result.privatePerson.recno,
+        ProjectNumber: documentData.flowStatus.syncProject.result.ProjectNumber,
+        CaseNumber: documentData.flowStatus.syncCase.result.CaseNumber,
+        DocumentNumber: documentData.flowStatus.archive.result.DocumentNumber
       }
     }
   }
