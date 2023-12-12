@@ -4,10 +4,11 @@
   const { mkdirSync, existsSync, writeFileSync } = require('fs')
   const { TFK_COUNTY, VFK_COUNTY } = require('../config.js')
   const csv = require('csvtojson')
+  const validator = require('@navikt/fnrvalidator')
 
   /* -------- MANUAL CONFIG HERE -------- */
   const VFK_ENABLED = true
-  const VFK_CSV_PATH = 'C:/tempBackups/overforingsbrevliste/AnsattlisteTEST.csv'
+  const VFK_CSV_PATH = 'C:/tempBackups/overforingsbrevliste/Vestfold ansatte oversendelsesbrev.csv'
 
   const TFK_ENABLED = false
   const TFK_CSV_PATH = 'csvpath'
@@ -19,6 +20,36 @@
       mkdirSync(dir)
     }
   }
+
+  const validateFnr = (fnr) => {
+    if (!fnr) {
+      logger('warn', ['Missing "Fødselsnr" row, adding to invalidRows dir'])
+      return { valid: false, ssn: null, type: null, reasons: [] }
+    }
+    if (typeof fnr !== 'string') {
+      logger('warn', ['"Fødselsnr" is not string, adding to invalidRows dir'])
+      return { valid: false, ssn: null, type: null, reasons: [] }
+    }
+    if (fnr.includes('.')) fnr = fnr.replaceAll('.', '')
+
+    if (fnr.length !== 11) {
+      logger('warn', ['"Fødselsnr" is not length 11, adding to invalidRows dir'])
+      return { valid: false, ssn: fnr, type: null, reasons: [] }
+    }
+
+    const fnrCheck = validator.fnr(fnr)
+
+
+    if (fnrCheck.status === 'invalid') {
+      logger('warn', ['"Fødselsnr" is not valid, adding to invalidRows dir'])
+      return { valid: false, ssn: fnr, type: null, reasons: fnrCheck.reasons }
+    }
+    if (fnrCheck.status = 'valid') {
+      return { valid: true, ssn: fnr, type: fnrCheck.type, reasons: [] }
+    }
+    throw new Error('what')
+  }
+
   const overforingsbrevFromCsv = async (county, csvFilePath) => {
     // Make sure directories are setup correct
     syncDir('./documents')
@@ -34,28 +65,22 @@
     }
     for (const employee of employees) {
       index++
-      if (!employee['11 siffer']) {
-        logger('warn', ['Missing "11 siffer" row, adding to invalidRows dir'])
-        writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify(employee, null, 2))
-        result.problems++
-        continue
-      }
-      if (employee['11 siffer'].trim().length !== 11) {
-        logger('warn', ['"11 siffer" row did not contain 11 digits! Adding to invalidRows dir'])
-        writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify(employee, null, 2))
+      const { ssn, valid, type, reasons } = validateFnr(employee['Fødselsnr'])
+      
+      if (!valid) {
+        writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify({ employee, ssn, valid, type, reasons }, null, 2))
         result.problems++
         continue
       }
       if (!employee['Navn']) {
         logger('warn', ['Missing "Navn" row, adding to invalidRows dir'])
-        writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify(employee, null, 2))
+        writeFileSync(`./documents/${county.NAME}/overforingsbrev/invalidRows/${index}.json`, JSON.stringify({ employee, ssn, valid, type, reasons }, null, 2))
         result.problems++
         continue
       }
       const overforingsbrevInfo = {
-        ssn: employee['11 siffer'].trim(),
-        name: employee['Navn'],
-        shortName: employee['Kortnavn']
+        ssn,
+        name: employee['Navn']
       }
       const documentId = `${overforingsbrevInfo.name.replaceAll(' ', '')}-${index}`
       writeFileSync(`./documents/${county.NAME}/overforingsbrev/OVERFORINGSBREV_${documentId}.json`, JSON.stringify(overforingsbrevInfo, null, 2))
