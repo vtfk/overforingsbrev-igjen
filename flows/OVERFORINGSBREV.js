@@ -124,8 +124,8 @@ module.exports = {
      * @param {OVERFORINGSBREV} documentData
     */
     mapper: (documentData) => {
-      const now = new Date()
-      const fancyDate = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`
+      const now = new Date().toISOString()
+      // const fancyDate = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`
       const privatePerson = documentData.flowStatus.syncPrivatePerson.result.privatePerson
       const employeeName = `${privatePerson.firstName} ${privatePerson.lastName}`
       const { invalidAddress } = invalidAddressCheck(privatePerson)
@@ -137,7 +137,7 @@ module.exports = {
         version: 'B',
         data: {
           preview: false,
-          documentDate: fancyDate,
+          documentDate: now,
           countyName: documentData.flowStatus.county.DISPLAY_NAME,
           employeeName,
           streetAddress: invalidAddress ? '' : privatePerson.streetAddress,
