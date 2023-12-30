@@ -1,10 +1,13 @@
 # overforingsbrev-igjen
-Nodejs script that handles document from vigo-isi
+Nodejs script that handles overforingsbrev for employees
 
 # Flows
 ## Overføringsbrev
 Oppretter et dokument per ansatt som skal få overføringsbrev fra csv-fil.
 Flytt over dokumentene til queue for riktig fylke. Kjør handle-queue for begge fylker, og nyt resultatet
+
+## SyncPrivatePerson for employee
+Oppretter privateperson for en ansatt i arkiv dersom 
 
 # Flyt
 

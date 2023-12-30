@@ -9,7 +9,7 @@ const syncPrivatePerson = async (documentData, jobDefinition) => {
   const syncPrivatePersonPayload = jobDefinition.mapper(documentData)
 
   logger('info', ['syncPrivatePerson', 'Calling archive with mapper payload'])
-  const response = await callArchive('syncPrivatePerson', syncPrivatePersonPayload)
+  const response = await callArchive('syncPrivatePerson', syncPrivatePersonPayload, documentData.flowStatus.county)
   logger('info', ['syncPrivatePerson', 'Succesfully synced privatePerson'])
   return response
 }
